@@ -1,14 +1,15 @@
 import express from "express";
+import { connectDB } from "./config/mongodb";
+import { env } from "./config/enviroment";
 
 const app = express();
 
-const hostname = "localhost";
-const port = 6868;
+connectDB().catch(console.log);
 
 app.get("/", (req, res) => {
   res.end("<h1>Hello world!</h1>");
 });
 
-app.listen(port, hostname, () => {
-  console.log(`Hello everyone, T'm running at ${hostname}:${port}/`);
+app.listen(env.PORT, env.HOST, () => {
+  console.log(`Hello everyone, T'm running at ${env.HOST}:${env.PORT}/`);
 });
