@@ -1,27 +1,30 @@
 import { MongoClient } from "mongodb";
 import { env } from "./enviroment";
 
+let dbInstance = null;
+
 export const connectDB = async () => {
   const client = new MongoClient(env.MONGODB_URI, {
     useUnifiedTopology: true,
     useNewUrlParser: true,
   });
-  try {
-    //Connect the client to the server
-    await client.connect();
 
-    //list databases
-    await listDatabases(client);
-    console.log("Connected successfully to server!");
-  } finally {
-    //Ensures that the client will close when finish/error
-    await client.close();
-  }
+  //Connect the client to the server
+  await client.connect();
+
+  //A sign clientDB to our dbInstance
+  dbInstance = client.db(env.DATABASE_NAME);
 };
 
-const listDatabases = async (client) => {
-  const databaseList = await client.db().admin().listDatabases();
-  console.log(databaseList);
-  console.log("Your databases: ");
-  databaseList.databases.forEach((db) => console.log(` - ${db.name}`));
+//Get db instance
+export const getDB = () => {
+  if (!dbInstance) throw new Error("Must connect to DB first!");
+  return dbInstance;
 };
+
+// const listDatabases = async (client) => {
+//   const databaseList = await client.db().admin().listDatabases();
+//   console.log(databaseList);
+//   console.log("Your databases: ");
+//   databaseList.databases.forEach((db) => console.log(` - ${db.name}`));
+// };
