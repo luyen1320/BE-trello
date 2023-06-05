@@ -1,7 +1,8 @@
 import express from "express";
 import { connectDB } from "./config/mongodb";
 import { env } from "./config/enviroment";
-import { BoardModel } from "./models/board.modal";
+// import { BoardModel } from "./models/board.modal";
+import { apiV1 } from "./routes/v1";
 
 connectDB()
   .then(() => console.log("Connected successfully to database server!"))
@@ -14,16 +15,12 @@ connectDB()
 const bootServer = () => {
   const app = express();
 
-  app.get("/", async (req, res) => {
-    // let fakeData = {
-    //   title: "trello-dev-clone",
-    // };
+  app.use(express.json());
 
-    // const result = await BoardModel.createNew(fakeData);
-    // return result.ops[0];
+  //use apis v1
+  app.use("/v1", apiV1);
 
-    res.end("<h1>Hello world!</h1>");
-  });
+  // res.end("<h1>Hello world!</h1>");
 
   app.listen(env.APP_PORT, env.APP_HOST, () => {
     console.log(
